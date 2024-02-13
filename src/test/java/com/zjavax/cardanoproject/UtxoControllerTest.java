@@ -19,6 +19,6 @@ public class UtxoControllerTest {
 
     @Test
     public void test() throws ApiException {
-        utxoController.getUtxoByAddress(address);
+        utxoController.getUtxoByAddress(address, 100, 1);
     }
 }

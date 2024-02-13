@@ -25,12 +25,18 @@ public class QuickTxBaseIT {
 
     public BackendService getBackendService() {
         if (BLOCKFROST.equals(backendType)) {
-            String bfProjectId = System.getProperty("BF_PROJECT_ID_MAINNET_ZJAVAX");
+//            String bfProjectId = System.getProperty("BF_PROJECT_ID_MAINNET_ZJAVAX");
+//            if (bfProjectId == null || bfProjectId.isEmpty()) {
+//                bfProjectId = System.getenv("BF_PROJECT_ID_MAINNET_ZJAVAX");
+//            }
+//            return new BFBackendService(Constants.BLOCKFROST_MAINNET_URL, bfProjectId);
+
+            String bfProjectId = System.getProperty("BF_PROJECT_ID_PREVIEW_ZJAVAX");
             if (bfProjectId == null || bfProjectId.isEmpty()) {
-                bfProjectId = System.getenv("BF_PROJECT_ID_MAINNET_ZJAVAX");
+                bfProjectId = System.getenv("BF_PROJECT_ID_PREVIEW_ZJAVAX");
             }
 
-            return new BFBackendService(Constants.BLOCKFROST_MAINNET_URL, bfProjectId);
+            return new BFBackendService(Constants.BLOCKFROST_PREVIEW_URL, bfProjectId);
         } else if (KOIOS.equals(backendType)) {
             return new KoiosBackendService(com.bloxbean.cardano.client.backend.koios.Constants.KOIOS_PREPROD_URL);
         } else
