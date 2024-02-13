@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.2</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.zjavax</groupId>
+	<artifactId>cardano-project</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>cardano-project</name>
+	<description>cardano-project</description>
+	<properties>
+		<java.version>17</java.version>
+		<cardano.client.version>0.5.0</cardano.client.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+
+<!--		bloxbean包-->
+		<dependency>
+			<groupId>com.bloxbean.cardano</groupId>
+			<artifactId>cardano-client-lib</artifactId>
+			<version>${cardano.client.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bloxbean.cardano</groupId>
+			<artifactId>cardano-client-backend-blockfrost</artifactId>
+			<version>${cardano.client.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bloxbean.cardano</groupId>
+			<artifactId>cardano-client-backend-koios</artifactId>
+			<version>${cardano.client.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bloxbean.cardano</groupId>
+			<artifactId>cardano-client-backend-ogmios</artifactId>
+			<version>${cardano.client.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bloxbean.cardano</groupId>
+			<artifactId>aiken-java-binding</artifactId>
+			<version>0.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>net.i2p.crypto</groupId>
+			<artifactId>eddsa</artifactId>
+			<version>0.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.30</version>
+		</dependency>
+
+		<!-- Test libraries -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.21.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--		bloxbean包-->
+
+		<!-- 加密 me -->
+<!--		<dependency>-->
+<!--			<groupId>org.jasypt</groupId>-->
+<!--			<artifactId>jasypt</artifactId>-->
+<!--			<version>1.9.2</version>-->
+<!--		</dependency>-->
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
