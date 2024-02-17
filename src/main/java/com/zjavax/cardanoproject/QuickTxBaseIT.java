@@ -2,6 +2,7 @@ package com.zjavax.cardanoproject;
 
 import co.nstant.in.cbor.CborException;
 import co.nstant.in.cbor.model.ByteString;
+import com.bloxbean.cardano.client.api.exception.ApiException;
 import com.bloxbean.cardano.client.api.model.Result;
 import com.bloxbean.cardano.client.api.model.Utxo;
 import com.bloxbean.cardano.client.backend.api.BackendService;
@@ -93,4 +94,34 @@ public class QuickTxBaseIT {
             throw new RuntimeException(e);
         }
     }
+
+    public List<Utxo> getUtxoListByhashAndOutputIndex(String hashAndOutputIndex) {
+        return List.of(getUtxoByhashAndOutputIndex(hashAndOutputIndex));
+    }
+
+    public Utxo getUtxoByhashAndOutputIndex(String hashAndOutputIndex) {
+        String[] split = hashAndOutputIndex.split("#");
+        Result<Utxo> txOutput = null;
+        try {
+            txOutput = getBackendService().getUtxoService().getTxOutput(split[0], Integer.parseInt(split[1]));
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
+        return txOutput.getValue();
+    }
+
+    public long getSlot(){
+        long validSlot = 0;
+        try {
+            validSlot = getBackendService().getBlockService().getLatestBlock().getValue().getSlot();
+        } catch (ApiException e) {
+            throw new RuntimeException(e);
+        }
+        validSlot = validSlot + 500000000;
+
+        return validSlot;
+    }
+
+
+
 }
