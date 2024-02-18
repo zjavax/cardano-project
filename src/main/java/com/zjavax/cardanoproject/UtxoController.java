@@ -44,15 +44,14 @@ public class UtxoController extends QuickTxBaseIT {
      * @return
      */
     @PostMapping("/getTxWithoutSign")
-    public String getTxWithoutSign(@RequestBody CollectFromUtxo collectFromUtxo) throws ApiException, CborSerializationException {
+    public String getTxWithoutSign(@RequestParam List<String> utxoStrList, @RequestBody ReceiverData receiverData) throws ApiException, CborSerializationException {
         List<Utxo> utxoList = new ArrayList<>();
-        for(String utxoStr:collectFromUtxo.getUtxoStrList()) {
+        for(String utxoStr: utxoStrList) {
             Utxo utxo = getUtxoByhashAndOutputIndex(utxoStr);
             utxoList.add(utxo);
         }
 
         List<Amount> amountList = new ArrayList<>();
-        ReceiverData receiverData = collectFromUtxo.getReceiverData();
         for(Asset asset: receiverData.getAssetList()){
             if(Constant.ADA.equals(asset.getAssetName())) {
                 amountList.add(Amount.ada(Double.valueOf(asset.getQuantity())));
