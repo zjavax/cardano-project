@@ -13,11 +13,11 @@ import java.util.List;
 @Builder
 public class ReceiverData {
 
-    private String receiverAddress;
-    private String feePayerAddress;
-    private int signersCount;
-    private List<Asset> assetList;
-    List<String> stakeAddressList;
+     String receiverAddress;
+     String feePayerAddress;
+     int signersCount;
+     List<Asset> assetList;  // 首先仅仅支持ada
+     List<String> stakeAddressList;
 
     public List<Asset> getAssetList() {
         if(assetList == null) {

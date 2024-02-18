@@ -53,7 +53,7 @@ public class UtxoControllerTest {
 
         List<String> strings = List.of("f3897bff6f873c19acc5b1efc6c8a099aed7f7facda7767be2938eb0809ee0ad#2",
                 "dc8f71afa6df7a7366b8a328afee87c0df6b3b966c351cc348495334f613765b#2");
-        String txWithoutSign = utxoController.getTxWithoutSign(strings, receiverData);
-        System.out.println(txWithoutSign);
+//        String txWithoutSign = utxoController.getTxWithoutSign(strings, receiverData);
+//        System.out.println(txWithoutSign);
     }
 }

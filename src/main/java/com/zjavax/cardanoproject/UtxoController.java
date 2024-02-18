@@ -16,11 +16,9 @@ import com.bloxbean.cardano.client.quicktx.ScriptTx;
 import com.bloxbean.cardano.client.quicktx.Tx;
 import com.bloxbean.cardano.client.transaction.spec.Transaction;
 import com.bloxbean.cardano.client.util.JsonUtil;
+import com.zjavax.cardanoproject.entity.CollectFromUtxo;
 import com.zjavax.cardanoproject.entity.ReceiverData;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -45,17 +43,18 @@ public class UtxoController extends QuickTxBaseIT {
      * @param assetList
      * @return
      */
-    @GetMapping("/getTxWithoutSign")
-    public String getTxWithoutSign(List<String> utxoStrList, ReceiverData receiverData) throws ApiException, CborSerializationException {
+    @PostMapping("/getTxWithoutSign")
+    public String getTxWithoutSign(@RequestBody CollectFromUtxo collectFromUtxo) throws ApiException, CborSerializationException {
         List<Utxo> utxoList = new ArrayList<>();
-        for(String utxoStr:utxoStrList) {
+        for(String utxoStr:collectFromUtxo.getUtxoStrList()) {
             Utxo utxo = getUtxoByhashAndOutputIndex(utxoStr);
             utxoList.add(utxo);
         }
 
         List<Amount> amountList = new ArrayList<>();
-        for(Asset asset:receiverData.getAssetList()){
-            if(CardanoConstants.LOVELACE.equals(asset.getAssetName())) {
+        ReceiverData receiverData = collectFromUtxo.getReceiverData();
+        for(Asset asset: receiverData.getAssetList()){
+            if(Constant.ADA.equals(asset.getAssetName())) {
                 amountList.add(Amount.ada(Double.valueOf(asset.getQuantity())));
             } else {
                 amountList.add(Amount.asset(asset.getPolicyId(), asset.getAssetName(), BigInteger.valueOf(Long.parseLong(asset.getQuantity()))));
