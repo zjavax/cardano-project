@@ -1,14 +1,19 @@
 package com.zjavax.cardanoproject;
 
+import com.bloxbean.cardano.client.address.Address;
+import com.bloxbean.cardano.client.address.AddressProvider;
 import com.bloxbean.cardano.client.api.exception.ApiException;
 import com.bloxbean.cardano.client.api.model.Amount;
 import com.bloxbean.cardano.client.api.model.Result;
 import com.bloxbean.cardano.client.api.model.Utxo;
+import com.bloxbean.cardano.client.backend.api.AccountService;
+import com.bloxbean.cardano.client.backend.model.AccountInformation;
 import com.bloxbean.cardano.client.backend.model.Asset;
 import com.bloxbean.cardano.client.common.CardanoConstants;
 import com.bloxbean.cardano.client.exception.CborSerializationException;
 import com.bloxbean.cardano.client.quicktx.QuickTxBuilder;
 import com.bloxbean.cardano.client.quicktx.ScriptTx;
+import com.bloxbean.cardano.client.quicktx.Tx;
 import com.bloxbean.cardano.client.transaction.spec.Transaction;
 import com.bloxbean.cardano.client.util.JsonUtil;
 import com.zjavax.cardanoproject.entity.ReceiverData;
@@ -41,7 +46,7 @@ public class UtxoController extends QuickTxBaseIT {
      * @return
      */
     @GetMapping("/getTxWithoutSign")
-    public String getTxWithoutSign(List<String> utxoStrList, ReceiverData receiverData) {
+    public String getTxWithoutSign(List<String> utxoStrList, ReceiverData receiverData) throws ApiException, CborSerializationException {
         List<Utxo> utxoList = new ArrayList<>();
         for(String utxoStr:utxoStrList) {
             Utxo utxo = getUtxoByhashAndOutputIndex(utxoStr);
@@ -58,27 +63,36 @@ public class UtxoController extends QuickTxBaseIT {
 
         }
 
-        ScriptTx scriptTx = new ScriptTx()
+        Tx tx = new Tx()
                 .payToAddress(receiverData.getReceiverAddress(), amountList)
-                .withChangeAddress("addr_test1qpszcr5nke788gwujpd3kceq9v7ucq7nax6amnl54enplslq3hh6n644cphm3cktvtjusv89m57segsdljcx3jekv5wscn6r4t")
                 .collectFrom(utxoList)
+                .from(utxoList.get(0).getAddress())
                 ;
 
+        if(receiverData.getStakeAddressList() !=null){
+            for (String stakeAddress:receiverData.getStakeAddressList()){
+                if(stakeAddress.startsWith("addr")) {
+                    Address address =  new Address(stakeAddress);
+                    stakeAddress = AddressProvider.getStakeAddress(address).getAddress();
+
+                    AccountService accountService = getBackendService().getAccountService();
+                    AccountInformation account = accountService.getAccountInformation(stakeAddress).getValue();
+
+                    tx = tx.withdraw(stakeAddress, BigInteger.valueOf(Long.parseLong(account.getWithdrawableAmount())));
+                }
+            }
+
+        }
+
         QuickTxBuilder quickTxBuilder = new QuickTxBuilder(getBackendService());
-        Transaction txWithoutSign = quickTxBuilder.compose(scriptTx)
-                .feePayer(receiverData.getFeePayerAddress())
+        Transaction txWithoutSign = quickTxBuilder.compose(tx)
                 .additionalSignersCount(receiverData.getSignersCount())
                 .validTo(getSlot())
-//                .mergeOutputs(false)
                 .build();
 
         System.out.println(JsonUtil.getPrettyJson(txWithoutSign));
 
-        try {
-            return txWithoutSign.serializeToHex();
-        } catch (CborSerializationException e) {
-            throw new RuntimeException(e);
-        }
+        return txWithoutSign.serializeToHex();
     }
 
 

@@ -3,6 +3,7 @@ package com.zjavax.cardanoproject;
 import com.bloxbean.cardano.client.api.exception.ApiException;
 import com.bloxbean.cardano.client.backend.model.Asset;
 import com.bloxbean.cardano.client.common.CardanoConstants;
+import com.bloxbean.cardano.client.exception.CborSerializationException;
 import com.zjavax.cardanoproject.entity.ReceiverData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +35,7 @@ public class UtxoControllerTest {
     String indigo_policyid = "fa3eff2047fdf9293c5feef4dc85ce58097ea1c6da4845a351535183";
     String assetName = "tINDY";
     @Test
-    public void getTxWithoutSignTest() {
+    public void getTxWithoutSignTest() throws CborSerializationException, ApiException {
         List<Asset> assets = new ArrayList<>();
         Asset asset = new Asset();
         asset.setAssetName(CardanoConstants.LOVELACE);
@@ -48,7 +49,6 @@ public class UtxoControllerTest {
         assets.add(asset2);
 
         ReceiverData receiverData = ReceiverData.builder().receiverAddress(receiver1)
-                .feePayerAddress("addr_test1qqvrxad4q4426ajkaddj5cl653mcr99svv4x87ke0uuhzheghnevm2hmuu6j5ncfe0yvzfm6wfrary64wuhd7jufetnq4zalvc")
                 .signersCount(2).assetList(assets).build();
 
         List<String> strings = List.of("f3897bff6f873c19acc5b1efc6c8a099aed7f7facda7767be2938eb0809ee0ad#2",
