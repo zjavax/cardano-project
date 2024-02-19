@@ -14,7 +14,7 @@ import java.util.List;
 public class ReceiverData {
 
      String receiverAddress;
-     String feePayerAddress;
+//     String feePayerAddress;
      int signersCount;
      List<Asset> assetList;  // 首先仅仅支持ada
      List<String> stakeAddressList;

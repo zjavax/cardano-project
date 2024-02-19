@@ -72,12 +72,11 @@ public class UtxoController extends QuickTxBaseIT {
                 if(stakeAddress.startsWith("addr")) {
                     Address address =  new Address(stakeAddress);
                     stakeAddress = AddressProvider.getStakeAddress(address).getAddress();
-
-                    AccountService accountService = getBackendService().getAccountService();
-                    AccountInformation account = accountService.getAccountInformation(stakeAddress).getValue();
-
-                    tx = tx.withdraw(stakeAddress, BigInteger.valueOf(Long.parseLong(account.getWithdrawableAmount())));
                 }
+                AccountService accountService = getBackendService().getAccountService();
+                AccountInformation account = accountService.getAccountInformation(stakeAddress).getValue();
+
+                tx = tx.withdraw(stakeAddress, BigInteger.valueOf(Long.parseLong(account.getWithdrawableAmount())));
             }
 
         }
