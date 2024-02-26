@@ -9,20 +9,19 @@ import com.bloxbean.cardano.client.api.model.Utxo;
 import com.bloxbean.cardano.client.backend.api.AccountService;
 import com.bloxbean.cardano.client.backend.model.AccountInformation;
 import com.bloxbean.cardano.client.backend.model.Asset;
-import com.bloxbean.cardano.client.common.CardanoConstants;
+import com.bloxbean.cardano.client.exception.CborDeserializationException;
 import com.bloxbean.cardano.client.exception.CborSerializationException;
 import com.bloxbean.cardano.client.quicktx.QuickTxBuilder;
-import com.bloxbean.cardano.client.quicktx.ScriptTx;
 import com.bloxbean.cardano.client.quicktx.Tx;
 import com.bloxbean.cardano.client.transaction.spec.Transaction;
+import com.bloxbean.cardano.client.transaction.spec.TransactionOutput;
+import com.bloxbean.cardano.client.util.HexUtil;
 import com.bloxbean.cardano.client.util.JsonUtil;
-import com.zjavax.cardanoproject.entity.CollectFromUtxo;
 import com.zjavax.cardanoproject.entity.ReceiverData;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController()
@@ -92,7 +91,30 @@ public class UtxoController extends QuickTxBaseIT {
         return txWithoutSign.serializeToHex();
     }
 
+    @PostMapping("/getByTxExcludeFee")
+    public String getByTxExcludeFee(@RequestParam String walletAddress, @RequestParam String uiFeeAddress, @RequestParam String cborHex) throws CborDeserializationException, CborSerializationException {
+        byte[] bytes = HexUtil.decodeHexString(cborHex);
+        Transaction tx = Transaction.deserialize(bytes);
 
+        List<TransactionOutput> outputs = tx.getBody().getOutputs();
+        int removeIndex = 0;
+        BigInteger removeAda = null;
 
+        for(TransactionOutput out:outputs) {
+            if(uiFeeAddress.equals(out.getAddress())){
+                removeIndex = outputs.indexOf(out);
+                removeAda = out.getValue().getCoin();
+            }
+        }
+
+        outputs.remove(removeIndex);
+        for(TransactionOutput out:outputs) {
+            if(walletAddress.equals(out.getAddress())){
+                out.getValue().setCoin(out.getValue().getCoin().add(removeAda));
+            }
+        }
+
+        return tx.serializeToHex();
+    }
 
 }

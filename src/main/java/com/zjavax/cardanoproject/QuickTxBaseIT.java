@@ -12,6 +12,8 @@ import com.bloxbean.cardano.client.backend.blockfrost.service.BFBackendService;
 import com.bloxbean.cardano.client.backend.koios.KoiosBackendService;
 import com.bloxbean.cardano.client.backend.model.TransactionContent;
 import com.bloxbean.cardano.client.common.cbor.CborSerializationUtil;
+import com.bloxbean.cardano.client.common.model.Network;
+import com.bloxbean.cardano.client.common.model.Networks;
 import com.bloxbean.cardano.client.plutus.spec.PlutusV2Script;
 import com.bloxbean.cardano.client.util.HexUtil;
 import com.bloxbean.cardano.client.util.JsonUtil;
@@ -23,6 +25,8 @@ public class QuickTxBaseIT {
     protected String BLOCKFROST = "blockfrost";
     protected String KOIOS = "koios";
     protected String backendType = BLOCKFROST;
+
+    String BF_PROJECT_ID = "BF_PROJECT_ID_PREVIEW_ZJAVAX";
 
     public BackendService getBackendService() {
         if (BLOCKFROST.equals(backendType)) {
